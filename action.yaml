@@ -1,0 +1,33 @@
+# action.yml
+name: generate-provenance
+author: puerco
+description: 'Installs and runs the tejolote attester to generate provenance metadata'
+branding:
+  icon: 'package'
+  color: 'blue'
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: puerco/tejolote
+        path: .ci/src/tejolote
+    
+    - name: Install Go    
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.19.2'
+        cache: true
+        cache-dependency-path: .ci/src/tejolote/go.sum
+    - name: Build Tejolote Attester
+      run: |
+        pwd
+        (cd .ci/src/tejolote; go build -o ../../tejolote cmd/tejolote/main.go)
+        rm -rfv .ci/src/tejolote
+    - name: Attest Run
+      env:
+        COSIGN_EXPERIMENTAL: true
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        pwd
+        ./.ci/tejolote attest --log-level=debug --sign github://${{ github.event.organization }}/${{ github.event.repository }}/${{ github.event.workflow_run.id }} 
