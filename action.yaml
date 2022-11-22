@@ -16,6 +16,7 @@ runs:
       with:
         repository: puerco/tejolote
         path: .ci/src/tejolote
+        ref: tuf-cache
     
     - name: Install Go    
       uses: actions/setup-go@v3
