@@ -5,6 +5,11 @@ description: 'Installs and runs the tejolote attester to generate provenance met
 branding:
   icon: 'package'
   color: 'blue'
+inputs:
+  GITHUB_TOKEN:
+    description: 'A github token to query the API'
+    required: true
+    default: 'abc'
 runs:
   using: "composite"
   steps:
@@ -20,14 +25,16 @@ runs:
         cache: true
         cache-dependency-path: .ci/src/tejolote/go.sum
     - name: Build Tejolote Attester
+      shell: bash
       run: |
         pwd
         (cd .ci/src/tejolote; go build -o ../../tejolote cmd/tejolote/main.go)
         rm -rfv .ci/src/tejolote
     - name: Attest Run
+      shell: bash
       env:
         COSIGN_EXPERIMENTAL: true
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ input.GITHUB_TOKEN }}
       run: |
         pwd
         ./.ci/tejolote attest --log-level=debug --sign github://${{ github.event.organization }}/${{ github.event.repository }}/${{ github.event.workflow_run.id }} 
