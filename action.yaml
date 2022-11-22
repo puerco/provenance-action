@@ -9,7 +9,6 @@ inputs:
   GITHUB_TOKEN:
     description: 'A github token to query the API'
     required: true
-    default: 'abc'
 runs:
   using: "composite"
   steps:
