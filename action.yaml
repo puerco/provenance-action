@@ -34,7 +34,7 @@ runs:
       shell: bash
       env:
         COSIGN_EXPERIMENTAL: true
-        GITHUB_TOKEN: ${{ input.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       run: |
         pwd
         ./.ci/tejolote attest --log-level=debug --sign github://${{ github.event.organization }}/${{ github.event.repository }}/${{ github.event.workflow_run.id }} 
