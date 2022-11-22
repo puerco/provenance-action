@@ -36,4 +36,4 @@ runs:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       run: |
         pwd
-        ./.ci/tejolote attest --log-level=debug --sign github://${{ github.event.workflow_run.organization }}/${{ github.event.workflow_run.repository }}/${{ github.event.workflow_run.id }} 
+        ./.ci/tejolote attest --log-level=debug --sign github://${{ github.event.organization.login }}/${{ github.event.repository.name }}/${{ github.event.workflow_run.id }} 
